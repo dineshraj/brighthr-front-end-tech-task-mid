@@ -2,6 +2,10 @@
   font-weight: bold;
 }
 
+.type, .added {
+  margin-left: 20px;
+}
+
 .folder-button {
   padding-left: 12px;
   color: rgb(144, 144, 231);
@@ -10,4 +14,8 @@
 
 .folder-button::before {
   content: "📂 ";
+}
+
+.file::before {
+  content: "📄 "
 }

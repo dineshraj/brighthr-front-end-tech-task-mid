@@ -20,15 +20,7 @@ function App() {
     fetchData(filesAndFolders);
   }, []);
 
-  return (
-    <div data-testid="app">
-      {data && (
-        <ul data-testid="file-list">
-          <ItemList items={data} />
-        </ul>
-      )}
-    </div>
-  );
+  return <div data-testid="app">{data && <ItemList items={data} />}</div>;
 }
 
 export default App;

@@ -4,44 +4,33 @@ import File from './File';
 import Folder from './Folder';
 
 interface ItemListProps {
-  items: DataItem[]
+  items: DataItem[];
 }
 
 const ItemList = ({ items }: ItemListProps) => {
+  // TODO TYPE
   return (
-    <>
+    <ul data-testid="file-list">
       {items.map((item: any, i: number) => (
         <li key={i}>
-          {item.type !== 'folder' ? (
-            <File file={item} />
+          {item.type === 'folder' ? (
+            <Folder folder={item} click={ } idToOpen={ } />
           ) : (
-            <Folder folder={item} />
+            <File file={item} />
           )}
-          {/* <ul>
-            <li className="name" data-testid="name">
-              {item.type !== 'folder' ? (
-                item.name
-              ) : (
-                <button className="folder-button">{item.name}</button>
-              )}
-            </li>
-            {item.type !== 'folder' && (
-              <li data-testid="filetype">
-                <span>Filetype: </span>
-                {item.type}
-              </li>
-            )}
-            {item.added && (
-              <li data-testid="date-added">
-                <span>Date Added: </span>
-                {item.added}
-              </li>
-            )}
-          </ul> */}
         </li>
       ))}
-    </>
+    </ul>
   );
 };
 
 export default ItemList;
+
+/*
+  Have a click handler here that is passed into Folder.
+  When it is clicked, it sets state of the folder to open (via the id)
+  Pass the set id into the folder component
+  If the set id matches the folder currently being rendered then
+    the Folder component will call the ItemList component again with the new array
+  This SHOULD ensure infinite recursion too.
+*/

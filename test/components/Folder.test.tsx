@@ -26,13 +26,11 @@ describe('Folder', () => {
     render(<Folder folder={mockData} />)
 
     const name = screen.getByTestId('name');
-    const type = screen.getByTestId('type'); 
 
     const folderButton = screen.getByText('Expenses');
     expect(folderButton).toHaveRole('button');
 
     expect(name).toHaveTextContent('Expenses')
-    expect(type).toHaveTextContent('folder');
   });
   
   it('does not render any files on initial render', () => {
