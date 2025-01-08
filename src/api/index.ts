@@ -12,6 +12,7 @@ const filesAndFolders: FileItem[] = [
     added: '2016-12-06',
   },
   {
+    id: '1',
     type: 'folder',
     name: 'Expenses',
     files: [
@@ -33,6 +34,7 @@ const filesAndFolders: FileItem[] = [
     added: '2016-08-12',
   },
   {
+    id: '2',
     type: 'folder',
     name: 'Misc',
     files: [
