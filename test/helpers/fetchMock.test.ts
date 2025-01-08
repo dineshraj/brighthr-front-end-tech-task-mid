@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import fetchMock from '../../src/helpers/fetchMock';
-import { act } from 'react';
 
 const mockData = {
   type: 'pdf',
@@ -21,7 +20,7 @@ describe('fetchMock', () => {
   it('returns the data provided', async () => {
     const fetchPromise = fetchMock(mockData);
     vi.runAllTimers();
-    const response = (await fetchPromise) as unknown as Response;
+    const response = await fetchPromise;
 
     expect(response.ok).toBe(true);
     const data = await response.json();
@@ -30,7 +29,6 @@ describe('fetchMock', () => {
   });
 
   it('waits for the timeout before returning', async () => {
-    vi.useFakeTimers();
     const fetchPromise = fetchMock(mockData);
     let resolved = false;
 
