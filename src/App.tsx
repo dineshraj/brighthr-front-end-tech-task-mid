@@ -3,9 +3,10 @@ import './App.css';
 import fetchMock from './helpers/fetchMock';
 import filesAndFolders from './api';
 import sortFilesAndFolders from './helpers/sortFilesAndFolders';
+import { FileItem } from './types';
 
 function App() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<FileItem[]>([]);
 
   useEffect(() => {
     const fetchData = async (data: Object) => {
@@ -28,10 +29,12 @@ function App() {
                 <li className="name" data-testid="name">
                   {item.type !== 'folder' ? item.name : <button className="folder-button">{item.name}</button>}
                 </li>
-                <li data-testid="filetype">
-                  <span>Filetype: </span>
-                  {item.type}
-                </li>
+                {item.type !== 'folder' && (
+                  <li data-testid="filetype">
+                    <span>Filetype: </span>
+                    {item.type}
+                  </li>
+                )}
                 {item.added && (
                   <li data-testid="date-added">
                     <span>Date Added: </span>

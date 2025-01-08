@@ -3,5 +3,11 @@
 }
 
 .folder-button {
-  padding-left: 1;
+  padding-left: 12px;
+  color: rgb(144, 144, 231);
+  text-decoration: underline;
+}
+
+.folder-button::before {
+  content: "📂 ";
 }
