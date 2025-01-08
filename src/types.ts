@@ -1,5 +1,5 @@
 export interface FileItem {
-  id?: number;
+  id?: string;
   name: string;
   type: string;
   added?: string;

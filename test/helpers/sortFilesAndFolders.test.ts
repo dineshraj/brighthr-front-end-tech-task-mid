@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import sortFilesAndFolders from '../../src/helpers/sortFilesAndFolders';
+import { FileItem } from '../../src/types';
 
-const mockData = [
+const mockData: FileItem[] = [
   {
     type: 'pdf',
     name: 'Employee Handbook',
