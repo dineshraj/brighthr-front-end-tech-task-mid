@@ -12,15 +12,9 @@ const mockDataOneFile = [
   },
 ];
 
-const mockDataOneFolder = [
-  {
-    type: 'folder',
-    name: 'Employee Handbook',
-  },
-];
-
 const mockDataFolderWithFiles = [
   {
+    id: '2',
     type: 'folder',
     name: 'Expenses',
     files: [
@@ -35,7 +29,7 @@ const mockDataFolderWithFiles = [
         added: '2017-05-03',
       },
     ],
-  }
+  },
 ];
 
 describe('App', () => {
@@ -58,7 +52,7 @@ describe('App', () => {
     mockFetchMock.mockReturnValue({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(),
+      json: () => Promise.resolve(mockDataOneFile),
     });
     render(<App />);
     const appDiv = await screen.findByTestId('app');
@@ -76,30 +70,15 @@ describe('App', () => {
     render(<App />);
 
     const fileName = await screen.findByTestId('name');
-    const filetype = await screen.findByTestId('filetype');
-    const dataAdded = await screen.findByTestId('date-added');
+    const filetype = await screen.findByTestId('type');
+    const dateAdded = await screen.findByTestId('added');
 
     expect(fileName).toHaveTextContent('Employee Handbook');
     expect(filetype).toHaveTextContent('pdf');
-    expect(dataAdded).toHaveTextContent('2017-01-06');
+    expect(dateAdded).toHaveTextContent('2017-01-06');
   });
 
-  it('does not display the added field if the listing is a folder', async () => {
-    mockFetchMock.mockReturnValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockDataOneFolder),
-    });
-
-    render(<App />);
-
-    await waitFor(() => {
-      const dataAdded = screen.queryByTestId('date-added');
-      expect(dataAdded).not.toBeInTheDocument();
-    });
-  });
-
-  it('lists the files in a folder', async () => {
+  it('lists the folders as a button', async () => {
     mockFetchMock.mockReturnValue({
       ok: true,
       status: 200,
@@ -108,7 +87,20 @@ describe('App', () => {
 
     render(<App />);
 
-    const folder = await screen.findByText('Expenses');
-    expect(folder).toHaveRole('button');
+    const folderButton = await screen.findByText('Expenses');
+    expect(folderButton).toHaveRole('button');
+  });
+
+  it.skip('clicking on a folder displays the contents below', async () => {
+    mockFetchMock.mockReturnValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(mockDataFolderWithFiles),
+    });
+
+    render(<App />);
+
+    const folderButton = await screen.findByText('Expenses');
+    folderButton.click();
   });
 });

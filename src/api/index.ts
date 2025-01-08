@@ -1,6 +1,6 @@
-import { FileItem } from "../types";
+import { DataItem } from "../types";
 
-const filesAndFolders: FileItem[] = [
+const filesAndFolders: DataItem[] = [
   {
     type: 'pdf',
     name: 'Employee Handbook',

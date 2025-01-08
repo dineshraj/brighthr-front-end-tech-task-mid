@@ -4,6 +4,7 @@ import fetchMock from './helpers/fetchMock';
 import filesAndFolders from './api';
 import sortFilesAndFolders from './helpers/sortFilesAndFolders';
 import { FileItem } from './types';
+import ItemList from './components/ItemList';
 
 function App() {
   const [data, setData] = useState<FileItem[]>([]);
@@ -23,27 +24,7 @@ function App() {
     <div data-testid="app">
       {data && (
         <ul data-testid="file-list">
-          {data.map((item: any, i: number) => (
-            <li key={i}>
-              <ul>
-                <li className="name" data-testid="name">
-                  {item.type !== 'folder' ? item.name : <button className="folder-button">{item.name}</button>}
-                </li>
-                {item.type !== 'folder' && (
-                  <li data-testid="filetype">
-                    <span>Filetype: </span>
-                    {item.type}
-                  </li>
-                )}
-                {item.added && (
-                  <li data-testid="date-added">
-                    <span>Date Added: </span>
-                    {item.added}
-                  </li>
-                )}
-              </ul>
-            </li>
-          ))}
+          <ItemList items={data} />
         </ul>
       )}
     </div>
