@@ -1,4 +1,6 @@
-const filesAndFolders = [
+import { FileItem } from "../types";
+
+const filesAndFolders: FileItem[] = [
   {
     type: 'pdf',
     name: 'Employee Handbook',
