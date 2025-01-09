@@ -1,15 +1,28 @@
 import { FolderItem } from '../types';
 import ItemList from './ItemList';
 
-const Folder = ({ folder }: { folder: FolderItem }) => {
+interface FolderProps {
+  folder: FolderItem;
+  clickHandler: (arg0: string) => void;
+  folderToOpen: string;
+}
+
+const Folder = ({ folder, clickHandler, folderToOpen }: FolderProps) => {
+  const hasNestedFolderThatShouldBeOpened =
+    folder.files && folderToOpen === folder.id;
+
   return (
     <ul data-testid="folder">
       <li data-testid="name">
-        <button className="folder-button">{folder.name}</button>
+        <button
+          className="folder-button"
+          data-testid="folder-button"
+          onClick={() => clickHandler(folder.id)}
+        >
+          {folder.name}
+        </button>
       </li>
-      {idToOpen === folder.id && (
-        <ItemList items={folder.files} />
-      )}
+      {hasNestedFolderThatShouldBeOpened && <li><ItemList items={folder.files} /></li>}
     </ul>
   );
 };

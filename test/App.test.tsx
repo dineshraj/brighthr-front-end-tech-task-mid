@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import App from '../src/App';
 import fetchMock from '../src/helpers/fetchMock';
@@ -22,12 +22,7 @@ const mockDataFolderWithFiles = [
         type: 'doc',
         name: 'Expenses claim form',
         added: '2017-05-02',
-      },
-      {
-        type: 'doc',
-        name: 'Fuel allowances',
-        added: '2017-05-03',
-      },
+      }
     ],
   },
 ];
@@ -70,8 +65,8 @@ describe('App', () => {
     render(<App />);
 
     const fileName = await screen.findByTestId('name');
-    const filetype = await screen.findByTestId('type');
-    const dateAdded = await screen.findByTestId('added');
+    const filetype = screen.getByTestId('type');
+    const dateAdded = screen.getByTestId('added');
 
     expect(fileName).toHaveTextContent('Employee Handbook');
     expect(filetype).toHaveTextContent('pdf');
@@ -91,7 +86,7 @@ describe('App', () => {
     expect(folderButton).toHaveRole('button');
   });
 
-  it.skip('clicking on a folder displays the contents below', async () => {
+  it('clicking on a folder displays the contents below', async () => {
     mockFetchMock.mockReturnValue({
       ok: true,
       status: 200,
@@ -101,6 +96,23 @@ describe('App', () => {
     render(<App />);
 
     const folderButton = await screen.findByText('Expenses');
-    folderButton.click();
+
+    let files = screen.queryByTestId('file');
+
+    expect(files).not.toBeInTheDocument();
+
+    fireEvent.click(folderButton);
+
+    files = screen.getByTestId('file');
+
+    expect(files).toBeInTheDocument();
+
+    const fileName = await screen.findAllByTestId('name');
+    const filetype = await screen.findByTestId('type');
+    const dateAdded = await screen.findByTestId('added');
+
+    expect(fileName[1]).toHaveTextContent('Expenses claim form');
+    expect(filetype).toHaveTextContent('doc');
+    expect(dateAdded).toHaveTextContent('2017-05-02');
   });
 });

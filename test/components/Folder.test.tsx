@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it } from 'vitest';
+import { describe, it, vi } from 'vitest';
 import Folder from '../../src/components/Folder';
+import { DataItem } from '../../src/types';
 
-const mockData = 
+const mockData: DataItem = 
 {
     id: '2',
     type: 'folder',
@@ -23,7 +24,7 @@ const mockData =
 
 describe('Folder', () => {
   it('lists the folder given as a button with correct text', () => { 
-    render(<Folder folder={mockData} />)
+    render(<Folder folder={mockData} clickHandler={() => {}}  folderToOpen='1'/>)
 
     const name = screen.getByTestId('name');
 
@@ -34,12 +35,23 @@ describe('Folder', () => {
   });
   
   it('does not render any files on initial render', () => {
-    render(<Folder folder={mockData} />);
+    render(
+      <Folder folder={mockData} clickHandler={() => {}} folderToOpen="" />
+    );
 
     const files = screen.queryByTestId('files');
 
     expect(files).not.toBeInTheDocument();
   })
 
-  it.skip('clicking the button calls the click handler', () => {});
+  it('clicking the button calls the click handler', async () => {
+    const clickMock = vi.fn();
+  
+    render(<Folder folder={mockData} clickHandler={clickMock} folderToOpen="" />);
+  
+    const folderButton = await screen.findByTestId('folder-button');
+    expect(clickMock).not.toHaveBeenCalled();
+    folderButton.click();
+    expect(clickMock).toHaveBeenCalled();
+  });
 });

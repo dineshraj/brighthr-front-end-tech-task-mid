@@ -1,22 +1,35 @@
-import { DataItem } from '../types';
+import { useState } from 'react';
+import { DataItem, FileItem, FolderItem } from '../types';
 
 import File from './File';
 import Folder from './Folder';
 
 interface ItemListProps {
-  items: DataItem[];
+  items: DataItem[] | undefined;
 }
 
 const ItemList = ({ items }: ItemListProps) => {
-  // TODO TYPE
+  const [folderToOpen, setFolderToOpen] = useState('');
+
+  const handleFolderClick = (folderId: string) => {
+    console.log('clicky click with', folderId);
+    
+    setFolderToOpen(folderId);
+  }
+
+
   return (
     <ul data-testid="file-list">
-      {items.map((item: any, i: number) => (
+      {items && items.map((item: DataItem, i: number) => (
         <li key={i}>
           {item.type === 'folder' ? (
-            <Folder folder={item} click={ } idToOpen={ } />
+            <Folder
+              folder={item as FolderItem}
+              clickHandler={handleFolderClick}
+              folderToOpen={folderToOpen}
+            />
           ) : (
-            <File file={item} />
+            <File file={item as FileItem} />
           )}
         </li>
       ))}
