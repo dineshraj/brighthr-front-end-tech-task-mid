@@ -3,26 +3,31 @@ import { DataItem, FileItem, FolderItem } from '../types';
 
 import File from './File';
 import Folder from './Folder';
+import { FOLDER } from '../constants';
 
 interface ItemListProps {
-  items: DataItem[] | undefined;
+  items: DataItem[];
 }
 
 const ItemList = ({ items }: ItemListProps) => {
   const [folderToOpen, setFolderToOpen] = useState('');
 
   const handleFolderClick = (folderId: string) => {
-    console.log('clicky click with', folderId);
-    
+    // if folderToOpen is the same as folderId that is being clicked then set folderToOpen to an empty string
+    // this toggles the folder open and closed
+    if (folderToOpen === folderId) {      
+      setFolderToOpen('');
+      return;
+    }
     setFolderToOpen(folderId);
   }
 
 
   return (
-    <ul data-testid="file-list">
+    <ul className="file-list" data-testid="file-list">
       {items && items.map((item: DataItem, i: number) => (
         <li key={i}>
-          {item.type === 'folder' ? (
+          {item.type === FOLDER ? (
             <Folder
               folder={item as FolderItem}
               clickHandler={handleFolderClick}

@@ -8,8 +8,8 @@ const mockDataOneFile = [
   {
     type: 'pdf',
     name: 'Employee Handbook',
-    added: '2017-01-06',
-  },
+    added: '2017-01-06'
+  }
 ];
 
 const mockDataFolderWithFiles = [
@@ -21,10 +21,64 @@ const mockDataFolderWithFiles = [
       {
         type: 'doc',
         name: 'Expenses claim form',
-        added: '2017-05-02',
+        added: '2017-05-02'
       }
-    ],
+    ]
+  }
+];
+
+const mockDataWithMultipleFilesAndFolders = [
+  {
+    type: 'pdf',
+    name: 'Employee Handbook',
+    added: '2017-01-06'
   },
+  {
+    type: 'pdf',
+    name: 'Public Holiday policy',
+    added: '2016-12-06'
+  },
+  {
+    id: '1',
+    type: 'folder',
+    name: 'Expenses',
+    added: '2017-04-06',
+    files: [
+      {
+        type: 'doc',
+        name: 'Expenses claim form',
+        added: '2017-05-02'
+      },
+      {
+        type: 'doc',
+        name: 'Fuel allowances',
+        added: '2017-05-03'
+      }
+    ]
+  },
+  {
+    type: 'csv',
+    name: 'Cost centres',
+    added: '2016-08-12'
+  },
+  {
+    id: '2',
+    type: 'folder',
+    name: 'Misc',
+    added: '2014-04-06',
+    files: [
+      {
+        type: 'doc',
+        name: 'Christmas party',
+        added: '2017-12-01'
+      },
+      {
+        type: 'mov',
+        name: 'Welcome to the company!',
+        added: '2015-04-24'
+      }
+    ]
+  }
 ];
 
 describe('App', () => {
@@ -33,7 +87,7 @@ describe('App', () => {
   beforeEach(() => {
     vi.mock('../src/helpers/fetchMock', () => {
       return {
-        default: vi.fn(),
+        default: vi.fn()
       };
     });
     mockFetchMock = fetchMock as jest.Mock;
@@ -47,7 +101,7 @@ describe('App', () => {
     mockFetchMock.mockReturnValue({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockDataOneFile),
+      json: () => Promise.resolve(mockDataOneFile)
     });
     render(<App />);
     const appDiv = await screen.findByTestId('app');
@@ -55,64 +109,114 @@ describe('App', () => {
     expect(appDiv).toBeVisible();
   });
 
-  it('renders the fetched data correctly', async () => {
-    mockFetchMock.mockReturnValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockDataOneFile),
+  describe('List of items', () => {
+    it('renders the fetched data correctly', async () => {
+      mockFetchMock.mockReturnValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(mockDataOneFile)
+      });
+
+      render(<App />);
+
+      const fileName = await screen.findByTestId('name');
+      const filetype = screen.getByTestId('type');
+      const dateAdded = screen.getByTestId('added');
+
+      expect(fileName).toHaveTextContent('Employee Handbook');
+      expect(filetype).toHaveTextContent('pdf');
+      expect(dateAdded).toHaveTextContent('2017-01-06');
     });
 
-    render(<App />);
+    it('lists the folders as a button', async () => {
+      mockFetchMock.mockReturnValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(mockDataFolderWithFiles)
+      });
 
-    const fileName = await screen.findByTestId('name');
-    const filetype = screen.getByTestId('type');
-    const dateAdded = screen.getByTestId('added');
+      render(<App />);
 
-    expect(fileName).toHaveTextContent('Employee Handbook');
-    expect(filetype).toHaveTextContent('pdf');
-    expect(dateAdded).toHaveTextContent('2017-01-06');
+      const folderButton = await screen.findByText('Expenses');
+      expect(folderButton).toHaveRole('button');
+    });
+
+    it('clicking on a folder displays the contents below', async () => {
+      mockFetchMock.mockReturnValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(mockDataFolderWithFiles)
+      });
+
+      render(<App />);
+
+      const folderButton = await screen.findByText('Expenses');
+
+      let file = screen.queryByTestId('file-name');
+
+      expect(file).not.toBeInTheDocument();
+
+      fireEvent.click(folderButton);
+
+      file = screen.getByTestId('file-name');
+
+      expect(file).toBeInTheDocument();
+
+      const fileName = await screen.findAllByTestId('name');
+      const filetype = await screen.findByTestId('type');
+      const dateAdded = await screen.findAllByTestId('added');
+
+      expect(fileName[1]).toHaveTextContent('Expenses claim form');
+      expect(filetype).toHaveTextContent('doc');
+      expect(dateAdded[1]).toHaveTextContent('2017-05-02');
+    });
+
+    it('clicking on a folder hides the contents if it is already open', async () => {
+      mockFetchMock.mockReturnValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(mockDataFolderWithFiles)
+      });
+
+      render(<App />);
+
+      const folderButton = await screen.findByText('Expenses');
+
+      fireEvent.click(folderButton);
+
+      const visibleFile = screen.getByTestId('file-name');
+
+      expect(visibleFile).toBeInTheDocument();
+
+      fireEvent.click(folderButton);
+
+      const nonVisibleFile = screen.queryByTestId('file-name');
+
+      expect(nonVisibleFile).not.toBeInTheDocument();
+    });
   });
 
-  it('lists the folders as a button', async () => {
-    mockFetchMock.mockReturnValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockDataFolderWithFiles),
+  describe('Sorting', () => {
+    it('sorts the file and folders by date when the Date button is clicked', async () => {
+      mockFetchMock.mockReturnValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(mockDataWithMultipleFilesAndFolders)
+      });
+
+      render(<App />);
+
+      const dateButton = await screen.findByText('Date');
+
+      fireEvent.click(dateButton);
+
+      const items = await screen.findAllByTestId('name');
+
+      expect(items[0]).toHaveTextContent('Misc');
+      expect(items[1]).toHaveTextContent('Cost centres');
+      expect(items[2]).toHaveTextContent('Public Holiday policy');
+      expect(items[3]).toHaveTextContent('Employee Handbook');
+      expect(items[4]).toHaveTextContent('Expenses');
     });
-
-    render(<App />);
-
-    const folderButton = await screen.findByText('Expenses');
-    expect(folderButton).toHaveRole('button');
-  });
-
-  it('clicking on a folder displays the contents below', async () => {
-    mockFetchMock.mockReturnValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockDataFolderWithFiles),
-    });
-
-    render(<App />);
-
-    const folderButton = await screen.findByText('Expenses');
-
-    let files = screen.queryByTestId('file');
-
-    expect(files).not.toBeInTheDocument();
-
-    fireEvent.click(folderButton);
-
-    files = screen.getByTestId('file');
-
-    expect(files).toBeInTheDocument();
-
-    const fileName = await screen.findAllByTestId('name');
-    const filetype = await screen.findByTestId('type');
-    const dateAdded = await screen.findByTestId('added');
-
-    expect(fileName[1]).toHaveTextContent('Expenses claim form');
-    expect(filetype).toHaveTextContent('doc');
-    expect(dateAdded).toHaveTextContent('2017-05-02');
   });
 });

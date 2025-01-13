@@ -1,8 +1,11 @@
 import { FileItem } from '../types';
 
+import '../styles/File.css';
+
+
 const File = ({ file }: { file: FileItem }) => {
   return (
-    <ul data-testid="file">
+    <ul data-testid="file-name">
       <li className="name file" data-testid="name">
         {file.name}
       </li>

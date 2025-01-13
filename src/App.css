@@ -6,16 +6,6 @@
   margin-left: 20px;
 }
 
-.folder-button {
-  padding-left: 12px;
-  color: rgb(144, 144, 231);
-  text-decoration: underline;
-}
-
-.folder-button::before {
-  content: "📂 ";
-}
-
-.file::before {
-  content: "📄 "
+.sort__text {
+  margin-right: 10px;
 }

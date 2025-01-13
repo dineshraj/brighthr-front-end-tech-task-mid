@@ -1,6 +1,8 @@
 import { FolderItem } from '../types';
 import ItemList from './ItemList';
 
+import '../styles/Folder.css';
+
 interface FolderProps {
   folder: FolderItem;
   clickHandler: (arg0: string) => void;
@@ -8,11 +10,9 @@ interface FolderProps {
 }
 
 const Folder = ({ folder, clickHandler, folderToOpen }: FolderProps) => {
-  const hasNestedFolderThatShouldBeOpened =
-    folder.files && folderToOpen === folder.id;
 
   return (
-    <ul data-testid="folder">
+    <ul data-testid="folder-name">
       <li data-testid="name">
         <button
           className="folder-button"
@@ -22,7 +22,12 @@ const Folder = ({ folder, clickHandler, folderToOpen }: FolderProps) => {
           {folder.name}
         </button>
       </li>
-      {hasNestedFolderThatShouldBeOpened && <li><ItemList items={folder.files} /></li>}
+      <li data-testid="added">{folder.added}</li>
+      {folder.files && folderToOpen === folder.id && (
+        <li>
+          <ItemList items={folder.files} />
+        </li>
+      )}
     </ul>
   );
 };

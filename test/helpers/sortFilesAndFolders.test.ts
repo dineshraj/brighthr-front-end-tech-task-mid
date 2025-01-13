@@ -1,55 +1,164 @@
 import { describe, expect, it } from 'vitest';
-import sortFilesAndFolders from '../../src/helpers/sortFilesAndFolders';
-import { FileItem } from '../../src/types';
+import { sortFilesAndFolders } from '../../src/helpers/sortFilesAndFolders';
+import { DataItem } from '../../src/types';
+import { DATE_ATTRIBUTE, NAME_ATTRIBUTE, SIZE_ATTRIBUTE } from '../../src/constants';
 
-const mockData: FileItem[] = [
+const mockData: DataItem[] = [
   {
     type: 'pdf',
     name: 'Employee Handbook',
     added: '2017-01-06',
+    size: '3.2 MB'
   },
   {
     type: 'folder',
-    name: 'Employee Handbook',
-    added: '2017-01-06',
+    name: 'Porn',
+    added: '2019-01-06',
+    size: '1.2 MB'
   },
   {
     type: 'jpeg',
-    name: 'Employee Handbook',
-    added: '2017-01-06',
+    name: 'the boss',
+    added: '2020-07-06',
+    size: '2.2 MB'
   },
   {
     type: 'folder',
-    name: 'Employee Handbook',
-    added: '2017-01-06',
-  },
+    name: 'misc',
+    added: '2020-01-06',
+    size: '12.2 MB'
+  }
 ];
+
 describe('sortFilesAndFolders', () => {
-  it('returns the sorted data', async () => {
+  it('returns the sorted data with folders at top by default', async () => {
     const sortedArray = sortFilesAndFolders(mockData);
 
     const expectedOutput = [
       {
         type: 'folder',
-        name: 'Employee Handbook',
-        added: '2017-01-06',
+        name: 'Porn',
+        added: '2019-01-06',
+        size: '1.2 MB'
       },
       {
         type: 'folder',
-        name: 'Employee Handbook',
-        added: '2017-01-06',
+        name: 'misc',
+        added: '2020-01-06',
+        size: '12.2 MB'
       },
       {
         type: 'pdf',
         name: 'Employee Handbook',
         added: '2017-01-06',
+        size: '3.2 MB'
       },
 
       {
         type: 'jpeg',
+        name: 'the boss',
+        added: '2020-07-06',
+        size: '2.2 MB'
+      }
+    ];
+
+    expect(sortedArray).toStrictEqual(expectedOutput);
+  });
+
+  it('returns the sorted data by date', async () => {
+    const sortedArray = sortFilesAndFolders(mockData, DATE_ATTRIBUTE);
+
+    const expectedOutput = [
+      {
+        type: 'pdf',
         name: 'Employee Handbook',
         added: '2017-01-06',
+        size: '3.2 MB'
       },
+      {
+        type: 'folder',
+        name: 'Porn',
+        added: '2019-01-06',
+        size: '1.2 MB'
+      },
+      {
+        type: 'folder',
+        name: 'misc',
+        added: '2020-01-06',
+        size: '12.2 MB'
+      },
+      {
+        type: 'jpeg',
+        name: 'the boss',
+        added: '2020-07-06',
+        size: '2.2 MB'
+      }
+    ];
+
+    expect(sortedArray).toStrictEqual(expectedOutput);
+  });
+
+  it('returns the sorted data by name', async () => {
+    const sortedArray = sortFilesAndFolders(mockData, NAME_ATTRIBUTE);
+
+    const expectedOutput = [
+      {
+        type: 'pdf',
+        name: 'Employee Handbook',
+        added: '2017-01-06',
+        size: '3.2 MB'
+      },
+      {
+        type: 'folder',
+        name: 'misc',
+        added: '2020-01-06',
+        size: '12.2 MB'
+      },
+      {
+        type: 'folder',
+        name: 'Porn',
+        added: '2019-01-06',
+        size: '1.2 MB'
+      },
+      {
+        type: 'jpeg',
+        name: 'the boss',
+        added: '2020-07-06',
+        size: '2.2 MB'
+      }
+    ];
+
+    expect(sortedArray).toStrictEqual(expectedOutput);
+  });
+
+  it('returns the sorted data by size', async () => {
+    const sortedArray = sortFilesAndFolders(mockData, SIZE_ATTRIBUTE);
+
+    const expectedOutput = [
+      {
+        type: 'folder',
+        name: 'misc',
+        added: '2020-01-06',
+        size: '12.2 MB'
+      },
+      {
+        type: 'pdf',
+        name: 'Employee Handbook',
+        added: '2017-01-06',
+        size: '3.2 MB'
+      },
+      {
+        type: 'jpeg',
+        name: 'the boss',
+        added: '2020-07-06',
+        size: '2.2 MB'
+      },
+      {
+        type: 'folder',
+        name: 'Porn',
+        added: '2019-01-06',
+        size: '1.2 MB'
+      }
     ];
 
     expect(sortedArray).toStrictEqual(expectedOutput);
