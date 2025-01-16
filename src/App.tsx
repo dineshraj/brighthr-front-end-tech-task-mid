@@ -22,7 +22,7 @@ function App() {
     fetchData(filesAndFolders);
   }, []);
   
-  const sortBy = (attribute: string) => {
+  const sortBy = (attribute?: string) => {
     const sortedData = sortFilesAndFolders(data, attribute);
     setData([...sortedData]);
   }
@@ -36,6 +36,7 @@ function App() {
             <SortButton handleOnClick={sortBy}>Date</SortButton>
             <SortButton handleOnClick={sortBy}>Name</SortButton>
             <SortButton handleOnClick={sortBy}>Size</SortButton>
+            <SortButton handleOnClick={() => sortBy('')}>Reset</SortButton>
           </div>
           <ItemList items={data} />
         </>
