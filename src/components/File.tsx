@@ -15,6 +15,9 @@ const File = ({ file }: { file: FileItem }) => {
       <li className="added" data-testid="added">
         {file.added}
       </li>
+      <li className="size" data-testid="size">
+        {file.size}
+      </li>
     </ul>
   );
 };

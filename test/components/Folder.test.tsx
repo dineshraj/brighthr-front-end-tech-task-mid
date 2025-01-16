@@ -29,15 +29,18 @@ const mockData: DataItem =
 describe('Folder', () => {
   it('lists the folder given as a button with correct information', () => { 
     render(<Folder folder={mockData} clickHandler={() => {}}  folderToOpen='1'/>)
+    
+    const folderButton = screen.getByText('Expenses');
 
     const name = screen.getByTestId('folder-name');
-
-    const folderButton = screen.getByText('Expenses');
     const added = screen.getByTestId('added');
+    const size = screen.getByTestId('size');
+
     expect(folderButton).toHaveRole('button');
 
     expect(name).toHaveTextContent('Expenses')
     expect(added).toHaveTextContent('2023-12-22');
+    expect(size).toHaveTextContent('1.2 MB');
   });
   
   it('does not render any files on initial render', () => {

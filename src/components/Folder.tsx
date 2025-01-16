@@ -22,7 +22,12 @@ const Folder = ({ folder, clickHandler, folderToOpen }: FolderProps) => {
           {folder.name}
         </button>
       </li>
-      <li data-testid="added">{folder.added}</li>
+      <li data-testid="added">
+        {folder.added}
+      </li>
+      <li data-testid="size">
+        {folder.size}
+      </li>
       {folder.files && folderToOpen === folder.id && (
         <li>
           <ItemList items={folder.files} />
