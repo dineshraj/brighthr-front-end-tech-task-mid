@@ -23,6 +23,24 @@ const sortByName = (a: DataItem, b: DataItem) => {
   return a.name.localeCompare(b.name);
 };
 
+const recursiveSort = (
+  array: DataItem[],
+  attribute: string,
+  sortFunction: (a: DataItem, b: DataItem) => number
+): DataItem[] => {
+  return array
+    .map((item: DataItem) => {
+      if (item.type === FOLDER && 'files' in item) {
+        return {
+          ...item,
+          files: item.files ? recursiveSort(item.files, attribute, sortFunction) : []
+        };
+      }
+      return item;
+    })
+    .sort(sortFunction);
+};
+
 const sortBySize = (a: DataItem, b: DataItem) => {
   const aAsNumber = parseFloat(a.size.substring(0, a.size.length - 3));
   const bAsNumber = parseFloat(b.size.substring(0, b.size.length - 3));
@@ -30,23 +48,18 @@ const sortBySize = (a: DataItem, b: DataItem) => {
 };
 
 const sortByAttribute = (array: DataItem[], attribute = '') => {
-  console.log('sortByAttribute');
-
   if (attribute === DATE_ATTRIBUTE) {
-    return array.sort(sortByDate);
+    return recursiveSort(array, attribute, sortByDate);
   } else if (attribute === NAME_ATTRIBUTE) {
-    return array.sort(sortByName);
+    return recursiveSort(array, attribute, sortByName);
   } else if (attribute === SIZE_ATTRIBUTE) {
-    return array.sort(sortBySize);
+    return recursiveSort(array, attribute, sortBySize);
   }
   return array;
 };
 
 export const sortFilesAndFolders = (array: DataItem[], attribute = '') => {
-  console.log('🚀 ~ sortFilesAndFolders ~ attribute:', attribute);
   if (attribute !== '') {
-    console.log('I have the attribute', attribute);
-
     return sortByAttribute(array, attribute);
   }
   return array.sort(sortByFolder);
