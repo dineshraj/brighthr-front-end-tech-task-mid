@@ -5,13 +5,13 @@ const filesAndFolders: DataItem[] = [
     type: 'pdf',
     name: 'Employee Handbook',
     added: '2017-01-06',
-    size: '3.2 MB',
+    size: '3.2 MB'
   },
   {
     type: 'pdf',
     name: 'Public Holiday policy',
     added: '2016-12-06',
-    size: '1.4 MB',
+    size: '1.4 MB'
   },
   {
     id: '1',
@@ -22,23 +22,29 @@ const filesAndFolders: DataItem[] = [
     files: [
       {
         type: 'doc',
+        name: 'More expenses claim form',
+        added: '2017-05-12',
+        size: '0.3 MB'
+      },
+      {
+        type: 'doc',
         name: 'Expenses claim form',
         added: '2017-05-02',
-        size: '0.3 MB',
+        size: '0.3 MB'
       },
       {
         type: 'doc',
         name: 'Fuel allowances',
         added: '2017-05-03',
-        size:  '0.2 MB',
-      },
-    ],
+        size: '0.2 MB'
+      }
+    ]
   },
   {
     type: 'csv',
     name: 'Cost centres',
     added: '2016-08-12',
-    size: '0.1 MB',
+    size: '0.1 MB'
   },
   {
     id: '2',
@@ -51,16 +57,16 @@ const filesAndFolders: DataItem[] = [
         type: 'doc',
         name: 'Christmas party',
         added: '2017-12-01',
-        size: '0.4 MB',
+        size: '0.4 MB'
       },
       {
         type: 'mov',
         name: 'Welcome to the company!',
         added: '2015-04-24',
-        size:  '0.1 MB',
-      },
-    ],
-  },
+        size: '0.1 MB'
+      }
+    ]
+  }
 ];
 
 export default filesAndFolders;
