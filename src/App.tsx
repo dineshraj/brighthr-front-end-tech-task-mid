@@ -8,6 +8,7 @@ import SortButton from './components/SortButton';
 
 import { sortFilesAndFolders } from './helpers/sortFilesAndFolders';
 import Filter from './components/Filter';
+import Sort from './components/Sort';
 
 function App() {
   const [data, setData] = useState<DataItem[]>([]);
@@ -33,13 +34,7 @@ function App() {
     <div data-testid="app">
       {data.length > 0 && (
         <>
-          <div className="sort">
-            <span className="sort__text">Sort by:</span>
-            <SortButton handleOnClick={sortBy}>Date</SortButton>
-            <SortButton handleOnClick={sortBy}>Name</SortButton>
-            <SortButton handleOnClick={sortBy}>Size</SortButton>
-            <SortButton handleOnClick={() => sortBy('')}>Reset</SortButton>
-          </div>
+          <Sort sortBy={sortBy} />
           <Filter
             handleOnChange={({ target }: { target: HTMLInputElement }) =>
               setFilter(target.value)
