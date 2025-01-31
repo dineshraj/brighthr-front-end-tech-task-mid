@@ -28,7 +28,7 @@ const mockData: DataItem =
 
 describe('Folder', () => {
   it('lists the folder given as a button with correct information', () => { 
-    render(<Folder folder={mockData} clickHandler={() => {}}  folderToOpen='1'/>)
+    render(<Folder folder={mockData} clickHandler={() => { }} filter={''}  folderToOpen='1'/>)
     
     const folderButton = screen.getByText('Expenses');
 
@@ -45,7 +45,12 @@ describe('Folder', () => {
   
   it('does not render any files on initial render', () => {
     render(
-      <Folder folder={mockData} clickHandler={() => {}} folderToOpen="" />
+      <Folder
+        folder={mockData}
+        clickHandler={() => {}}
+        filter={''}
+        folderToOpen=""
+      />
     );
 
     const files = screen.queryByTestId('files');
@@ -56,7 +61,14 @@ describe('Folder', () => {
   it('clicking the button calls the click handler', async () => {
     const clickMock = vi.fn();
   
-    render(<Folder folder={mockData} clickHandler={clickMock} folderToOpen="" />);
+    render(
+      <Folder
+        folder={mockData}
+        clickHandler={clickMock}
+        filter={''}
+        folderToOpen=""
+      />
+    );
   
     const folderButton = await screen.findByTestId('folder-button');
     expect(clickMock).not.toHaveBeenCalled();

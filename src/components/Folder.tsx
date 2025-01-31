@@ -6,7 +6,7 @@ import '../styles/Folder.css';
 interface FolderProps {
   folder: FolderItem;
   clickHandler: (arg0: string) => void;
-  folderToOpen: string;
+  folderToOpen: boolean | string;
   filter: string;
 }
 

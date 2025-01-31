@@ -345,5 +345,33 @@ describe('App', () => {
       expect(items.length).toBe(1);
       expect(items[0]).toHaveTextContent('Expenses');
     });
+
+    it('nested files and folders are included in the filter output', async () => {
+      mockFetchMock.mockReturnValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(mockDataWithMultipleFilesAndFolders)
+      });
+
+      render(<App />);
+
+      const filterInput = await screen.findByTestId('filter');
+
+      fireEvent.change(filterInput, {
+        target: { value: 'm' }
+      });
+
+      const items = await screen.findAllByTestId('name');
+
+      expect(items[0]).toHaveTextContent('Expenses'); // folder containing an 'm' file
+      fireEvent.click(items[0].getElementsByTagName('button')[0]);
+      expect(screen.getByText('Expenses claim form')).toBeInTheDocument();
+
+      expect(items[1]).toHaveTextContent('Misc');
+      fireEvent.click(items[1].getElementsByTagName('button')[0]);
+      expect(screen.getByText('Welcome to the company!')).toBeInTheDocument();
+
+      expect(items[2]).toHaveTextContent('Employee Handbook');
+    });
   });
 });

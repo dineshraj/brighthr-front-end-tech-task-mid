@@ -7,7 +7,7 @@ import { FOLDER } from '../constants';
 
 interface ItemListProps {
   items: DataItem[];
-  filter: string
+  filter: string;
 }
 
 const ItemList = ({ items, filter }: ItemListProps) => {
@@ -16,42 +16,51 @@ const ItemList = ({ items, filter }: ItemListProps) => {
   const handleFolderClick = (folderId: string) => {
     // if folderToOpen is the same as folderId that is being clicked then set folderToOpen to an empty string
     // this toggles the folder open and closed
-    if (folderToOpen === folderId) {      
+    if (folderToOpen === folderId) {
       setFolderToOpen('');
       return;
     }
     setFolderToOpen(folderId);
-  }
+  };
 
+  const filterName = (item: FileItem, filter: string) => {
+    return item.name.toLowerCase().includes(filter.toLowerCase());
+  };
+
+  const filterFolder = (item: FolderItem, filter: string) => {
+    const folderFiles = item.files || [];
+    const folderMatches = filterName(item, filter);
+    const fileMatches = folderFiles.filter((file) => filterName(file, filter));
+
+    // Neither folder or internal files match so do not render
+    if (!folderMatches && fileMatches.length === 0) {
+      return false;
+    }
+
+    return true;
+  };
 
   return (
     <ul className="file-list" data-testid="file-list">
-      {items && items.map((item: DataItem, i: number) => (
-        item.name.toLowerCase().includes(filter.toLowerCase()) &&
-        <li key={i}>
-          {item.type === FOLDER ? (
-            <Folder
-              folder={item as FolderItem}
-              clickHandler={handleFolderClick}
-                folderToOpen={folderToOpen}
-                filter={filter}
-            />
-          ) : (
-            <File file={item as FileItem} />
-          )}
-        </li>
-      ))}
+      {items &&
+        items.map((item: DataItem, i: number) => {
+          return (
+            <li key={i}>
+              {item.type === FOLDER
+                ? filterFolder(item as FolderItem, filter) && (
+                    <Folder
+                      folder={item as FolderItem}
+                      clickHandler={handleFolderClick}
+                      folderToOpen={folderToOpen}
+                      filter={filter}
+                    />
+                  )
+                : filterName(item, filter) && <File file={item as FileItem} />}
+            </li>
+          );
+        })}
     </ul>
   );
 };
 
 export default ItemList;
-
-/*
-  Have a click handler here that is passed into Folder.
-  When it is clicked, it sets state of the folder to open (via the id)
-  Pass the set id into the folder component
-  If the set id matches the folder currently being rendered then
-    the Folder component will call the ItemList component again with the new array
-  This SHOULD ensure infinite recursion too.
-*/

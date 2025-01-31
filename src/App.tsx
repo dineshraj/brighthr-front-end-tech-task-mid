@@ -1,14 +1,23 @@
 import { useEffect, useState } from 'react';
-import './App.css';
-import fetchMock from './helpers/fetchMock';
-import filesAndFolders from './api';
-import { DataItem } from './types';
-import ItemList from './components/ItemList';
-import SortButton from './components/SortButton';
 
-import { sortFilesAndFolders } from './helpers/sortFilesAndFolders';
+import filesAndFolders from './api';
+
+import ItemList from './components/ItemList';
 import Filter from './components/Filter';
 import Sort from './components/Sort';
+
+import { DataItem } from './types';
+
+import fetchMock from './helpers/fetchMock';
+import { sortFilesAndFolders } from './helpers/sortFilesAndFolders';
+
+import './App.css';
+
+/*
+  TODO
+    - filter works on files inside folders
+    - multiple folders can be open at once
+*/
 
 function App() {
   const [data, setData] = useState<DataItem[]>([]);
