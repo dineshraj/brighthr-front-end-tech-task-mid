@@ -6,11 +6,13 @@ import { DataItem } from './types';
 import ItemList from './components/ItemList';
 import SortButton from './components/SortButton';
 
-import { sortFilesAndFolders }  from './helpers/sortFilesAndFolders';
+import { sortFilesAndFolders } from './helpers/sortFilesAndFolders';
+import Filter from './components/Filter';
 
 function App() {
   const [data, setData] = useState<DataItem[]>([]);
-  
+  const [filter, setFilter] = useState('');
+
   useEffect(() => {
     const fetchData = async (data: Object) => {
       const response = await fetchMock(data);
@@ -18,14 +20,14 @@ function App() {
       const sortedData = sortFilesAndFolders(json);
       setData(sortedData);
     };
-    
+
     fetchData(filesAndFolders);
   }, []);
-  
+
   const sortBy = (attribute?: string) => {
     const sortedData = sortFilesAndFolders(data, attribute);
     setData([...sortedData]);
-  }
+  };
 
   return (
     <div data-testid="app">
@@ -38,7 +40,13 @@ function App() {
             <SortButton handleOnClick={sortBy}>Size</SortButton>
             <SortButton handleOnClick={() => sortBy('')}>Reset</SortButton>
           </div>
-          <ItemList items={data} />
+          <Filter
+            handleOnChange={({ target }: { target: HTMLInputElement }) =>
+              setFilter(target.value)
+            }
+            filter={filter}
+          />
+          <ItemList items={data} filter={filter} />
         </>
       )}
     </div>

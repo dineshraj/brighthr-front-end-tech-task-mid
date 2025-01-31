@@ -34,7 +34,7 @@ const mockData = [
 
 describe('ItemList', () => {
   it('renders the list of items provided', async () => {
-    render(<ItemList items={mockData} />);
+    render(<ItemList items={mockData} filter={''}  />);
 
     const files = screen.getAllByTestId('file-name');
     const folders = screen.getAllByTestId('folder-name');
@@ -43,21 +43,21 @@ describe('ItemList', () => {
   });
 
   it('only passes files to the File component', async () => {
-    render(<ItemList items={mockData} />);
+    render(<ItemList items={mockData} filter={''} />);
 
     const items = screen.getAllByTestId('file-name');
     expect(items).toHaveLength(1);
   });
 
   it('only passes folders to the Folders component', async () => {
-    render(<ItemList items={mockData} />);
+    render(<ItemList items={mockData} filter={''} />);
 
     const items = screen.getAllByTestId('folder-name');
     expect(items).toHaveLength(1);
   });
 
   it('if folder is already open and is clicked it hides the files', async () => {
-    render(<ItemList items={mockData} />);
+    render(<ItemList items={mockData} filter={''} />);
 
     expect(screen.queryByText('Expenses claim form')).not.toBeInTheDocument();
 

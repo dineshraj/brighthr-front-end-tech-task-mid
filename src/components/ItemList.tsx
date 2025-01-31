@@ -7,9 +7,10 @@ import { FOLDER } from '../constants';
 
 interface ItemListProps {
   items: DataItem[];
+  filter: string
 }
 
-const ItemList = ({ items }: ItemListProps) => {
+const ItemList = ({ items, filter }: ItemListProps) => {
   const [folderToOpen, setFolderToOpen] = useState('');
 
   const handleFolderClick = (folderId: string) => {
@@ -26,12 +27,14 @@ const ItemList = ({ items }: ItemListProps) => {
   return (
     <ul className="file-list" data-testid="file-list">
       {items && items.map((item: DataItem, i: number) => (
+        item.name.toLowerCase().includes(filter.toLowerCase()) &&
         <li key={i}>
           {item.type === FOLDER ? (
             <Folder
               folder={item as FolderItem}
               clickHandler={handleFolderClick}
-              folderToOpen={folderToOpen}
+                folderToOpen={folderToOpen}
+                filter={filter}
             />
           ) : (
             <File file={item as FileItem} />

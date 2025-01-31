@@ -84,7 +84,7 @@ const mockDataWithMultipleFilesAndFolders = [
         type: 'mov',
         name: 'Welcome to the company!',
         added: '2015-04-24',
-        size: '0.1 MB'  
+        size: '0.1 MB'
       }
     ]
   }
@@ -118,7 +118,7 @@ describe('App', () => {
     expect(appDiv).toBeVisible();
   });
 
-  describe('List of items', () => {
+  describe('Items', () => {
     it('renders the fetched data correctly', async () => {
       mockFetchMock.mockReturnValue({
         ok: true,
@@ -223,73 +223,71 @@ describe('App', () => {
       expect(items[3]).toHaveTextContent('Public Holiday policy');
       expect(items[2]).toHaveTextContent('Employee Handbook');
     });
-  });
+    it('sorts the file and folders by date when the Date button is clicked', async () => {
+      mockFetchMock.mockReturnValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(mockDataWithMultipleFilesAndFolders)
+      });
 
-  it('sorts the file and folders by date when the Date button is clicked', async () => {
-    mockFetchMock.mockReturnValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockDataWithMultipleFilesAndFolders)
+      render(<App />);
+
+      const dateButton = await screen.findByText('Date');
+
+      fireEvent.click(dateButton);
+
+      const items = await screen.findAllByTestId('name');
+
+      expect(items[0]).toHaveTextContent('Misc');
+      expect(items[3]).toHaveTextContent('Employee Handbook');
+      expect(items[1]).toHaveTextContent('Cost centres');
+      expect(items[2]).toHaveTextContent('Public Holiday policy');
+      expect(items[4]).toHaveTextContent('Expenses');
     });
 
-    render(<App />);
+    it('sorts the file and folders by name when the Date button is clicked', async () => {
+      mockFetchMock.mockReturnValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(mockDataWithMultipleFilesAndFolders)
+      });
 
-    const dateButton = await screen.findByText('Date');
+      render(<App />);
 
-    fireEvent.click(dateButton);
+      const nameButton = await screen.findByText('Name');
 
-    const items = await screen.findAllByTestId('name');
+      fireEvent.click(nameButton);
 
-    expect(items[0]).toHaveTextContent('Misc');
-    expect(items[3]).toHaveTextContent('Employee Handbook');
-    expect(items[1]).toHaveTextContent('Cost centres');
-    expect(items[2]).toHaveTextContent('Public Holiday policy');
-    expect(items[4]).toHaveTextContent('Expenses');
-  });
+      const items = await screen.findAllByTestId('name');
 
-  it('sorts the file and folders by name when the Date button is clicked', async () => {
-    mockFetchMock.mockReturnValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockDataWithMultipleFilesAndFolders)
+      expect(items[0]).toHaveTextContent('Cost centres');
+      expect(items[1]).toHaveTextContent('Employee Handbook');
+      expect(items[2]).toHaveTextContent('Expenses');
+      expect(items[3]).toHaveTextContent('Misc');
+      expect(items[4]).toHaveTextContent('Public Holiday policy');
     });
 
-    render(<App />);
+    it('sorts the file and folders by size when the Size button is clicked', async () => {
+      mockFetchMock.mockReturnValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(mockDataWithMultipleFilesAndFolders)
+      });
 
-    const nameButton = await screen.findByText('Name');
+      render(<App />);
 
-    fireEvent.click(nameButton);
+      const sizeButton = await screen.findByText('Size');
 
-    const items = await screen.findAllByTestId('name');
+      fireEvent.click(sizeButton);
 
-    expect(items[0]).toHaveTextContent('Cost centres');
-    expect(items[1]).toHaveTextContent('Employee Handbook');
-    expect(items[2]).toHaveTextContent('Expenses');
-    expect(items[3]).toHaveTextContent('Misc');
-    expect(items[4]).toHaveTextContent('Public Holiday policy');
-  });
+      const items = await screen.findAllByTestId('name');
 
-  it('sorts the file and folders by size when the Size button is clicked', async () => {
-    mockFetchMock.mockReturnValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockDataWithMultipleFilesAndFolders)
+      expect(items[0]).toHaveTextContent('Employee Handbook');
+      expect(items[1]).toHaveTextContent('Public Holiday policy');
+      expect(items[2]).toHaveTextContent('Expenses');
+      expect(items[3]).toHaveTextContent('Misc');
+      expect(items[4]).toHaveTextContent('Cost centres');
     });
-
-    render(<App />);
-
-    const sizeButton = await screen.findByText('Size');
-
-    fireEvent.click(sizeButton);
-
-    const items = await screen.findAllByTestId('name');
-
-    expect(items[0]).toHaveTextContent('Employee Handbook');
-    expect(items[1]).toHaveTextContent('Public Holiday policy');
-    expect(items[2]).toHaveTextContent('Expenses');
-    expect(items[3]).toHaveTextContent('Misc');
-    expect(items[4]).toHaveTextContent('Cost centres');
-  });
 
     it('sorts the file and folders back to default when the Rest button is clicked', async () => {
       mockFetchMock.mockReturnValue({
@@ -312,16 +310,40 @@ describe('App', () => {
       expect(items[3]).toHaveTextContent('Misc');
       expect(items[4]).toHaveTextContent('Cost centres');
 
-       const resetButton = await screen.findByText('Reset');
+      const resetButton = await screen.findByText('Reset');
 
-       fireEvent.click(resetButton);
+      fireEvent.click(resetButton);
 
       items = await screen.findAllByTestId('name');
-      
-       expect(items[0]).toHaveTextContent('Expenses');
-       expect(items[1]).toHaveTextContent('Misc');
-       expect(items[4]).toHaveTextContent('Cost centres');
-       expect(items[3]).toHaveTextContent('Public Holiday policy');
-       expect(items[2]).toHaveTextContent('Employee Handbook');
+
+      expect(items[0]).toHaveTextContent('Expenses');
+      expect(items[1]).toHaveTextContent('Misc');
+      expect(items[4]).toHaveTextContent('Cost centres');
+      expect(items[3]).toHaveTextContent('Public Holiday policy');
+      expect(items[2]).toHaveTextContent('Employee Handbook');
     });
+  });
+
+  describe('Filtering', () => {
+    it('filters the files and folders by name on the root level', async () => {
+      mockFetchMock.mockReturnValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(mockDataWithMultipleFilesAndFolders)
+      });
+
+      render(<App />);
+
+      const filterInput = await screen.findByTestId('filter');
+
+      fireEvent.change(filterInput, {
+        target: { value: 'Expenses' }
+      });
+
+      const items = await screen.findAllByTestId('name');
+
+      expect(items.length).toBe(1);
+      expect(items[0]).toHaveTextContent('Expenses');
+    });
+  });
 });

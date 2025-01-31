@@ -7,10 +7,10 @@ interface FolderProps {
   folder: FolderItem;
   clickHandler: (arg0: string) => void;
   folderToOpen: string;
+  filter: string;
 }
 
-const Folder = ({ folder, clickHandler, folderToOpen }: FolderProps) => {
-
+const Folder = ({ folder, clickHandler, folderToOpen, filter }: FolderProps) => {
   return (
     <ul data-testid="folder-name">
       <li data-testid="name">
@@ -22,15 +22,11 @@ const Folder = ({ folder, clickHandler, folderToOpen }: FolderProps) => {
           {folder.name}
         </button>
       </li>
-      <li data-testid="added">
-        {folder.added}
-      </li>
-      <li data-testid="size">
-        {folder.size}
-      </li>
+      <li data-testid="added">{folder.added}</li>
+      <li data-testid="size">{folder.size}</li>
       {folder.files && folderToOpen === folder.id && (
         <li>
-          <ItemList items={folder.files} />
+          <ItemList items={folder.files} filter={filter} />
         </li>
       )}
     </ul>
